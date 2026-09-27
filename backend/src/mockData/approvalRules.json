@@ -1,0 +1,36 @@
+[
+  {
+    "sector": "Manufacturing - Non-Polluting",
+    "approvals": [
+      { "departmentName": "Labour Department", "approvalType": "Factory Licence", "defaultSlaDays": 15, "isParallel": true },
+      { "departmentName": "Fire Department", "approvalType": "Fire NOC", "defaultSlaDays": 21, "isParallel": true },
+      { "departmentName": "Electricity Board", "approvalType": "Electricity Connection", "defaultSlaDays": 14, "isParallel": true }
+    ]
+  },
+  {
+    "sector": "Manufacturing - Polluting",
+    "approvals": [
+      { "departmentName": "Labour Department", "approvalType": "Factory Licence", "defaultSlaDays": 15, "isParallel": true },
+      { "departmentName": "Fire Department", "approvalType": "Fire NOC", "defaultSlaDays": 21, "isParallel": true },
+      { "departmentName": "Electricity Board", "approvalType": "Electricity Connection", "defaultSlaDays": 14, "isParallel": true },
+      { "departmentName": "MPCB", "approvalType": "Pollution NOC", "defaultSlaDays": 30, "isParallel": false }
+    ]
+  },
+  {
+    "sector": "IT/Services",
+    "approvals": [
+      { "departmentName": "Labour Department", "approvalType": "Factory Licence", "defaultSlaDays": 15, "isParallel": true },
+      { "departmentName": "Electricity Board", "approvalType": "Electricity Connection", "defaultSlaDays": 14, "isParallel": true }
+    ]
+  },
+  {
+    "sector": "Food Processing",
+    "approvals": [
+      { "departmentName": "Labour Department", "approvalType": "Factory Licence", "defaultSlaDays": 15, "isParallel": true },
+      { "departmentName": "Fire Department", "approvalType": "Fire NOC", "defaultSlaDays": 21, "isParallel": true },
+      { "departmentName": "Electricity Board", "approvalType": "Electricity Connection", "defaultSlaDays": 14, "isParallel": true },
+      { "departmentName": "FSSAI", "approvalType": "Food Safety Licence", "defaultSlaDays": 25, "isParallel": true },
+      { "departmentName": "MPCB", "approvalType": "Pollution NOC", "defaultSlaDays": 30, "isParallel": false }
+    ]
+  }
+]

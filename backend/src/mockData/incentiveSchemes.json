@@ -1,0 +1,27 @@
+[
+  {
+    "schemeName": "MSME Technology Upgrade Subsidy",
+    "description": "Subsidy up to 15% of capital investment for technology upgrades in manufacturing MSMEs. Applicable for units investing ₹5 lakh or more in new machinery and equipment.",
+    "eligibilityCriteria": { "sectorContains": "Manufacturing", "minInvestment": 500000 }
+  },
+  {
+    "schemeName": "Green Industry Tax Rebate",
+    "description": "5-year property tax rebate for certified non-polluting manufacturing units. Encourages clean industrial practices with up to 50% tax exemption.",
+    "eligibilityCriteria": { "sector": "Manufacturing - Non-Polluting", "minInvestment": 1000000 }
+  },
+  {
+    "schemeName": "IT Park Incentive Package",
+    "description": "Stamp duty exemption and electricity duty waiver for IT/Services units in designated IT parks across Maharashtra. Valid for first 10 years of operation.",
+    "eligibilityCriteria": { "sector": "IT/Services", "minInvestment": 2000000 }
+  },
+  {
+    "schemeName": "Employment Generation Subsidy",
+    "description": "Per-employee monthly subsidy of ₹3,000 for units creating 50+ direct jobs. Available across all sectors for investments exceeding ₹50 lakh.",
+    "eligibilityCriteria": { "minInvestment": 5000000 }
+  },
+  {
+    "schemeName": "Food Processing Industry Support Scheme",
+    "description": "Capital subsidy of 25% for food processing units investing in cold chain and processing infrastructure. Maximum subsidy of ₹50 lakh.",
+    "eligibilityCriteria": { "sector": "Food Processing", "minInvestment": 1000000 }
+  }
+]
