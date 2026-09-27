@@ -1,14 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
-  <defs>
-    <linearGradient id="purple-bolt-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#c084fc" />
-      <stop offset="40%" stop-color="#9333ea" />
-      <stop offset="100%" stop-color="#3b82f6" />
-    </linearGradient>
-  </defs>
-  <path 
-    d="M19 2L6.5 17.5H15L12 30L25.5 14.5H17.5L19 2Z" 
-    fill="url(#purple-bolt-grad)" 
-    stroke-linejoin="round"
-  />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="#f4f4f5" />
+  <text 
+    x="32" 
+    y="34" 
+    font-family="'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif" 
+    font-weight="900" 
+    font-size="38" 
+    fill="#09090b" 
+    text-anchor="middle" 
+    dominant-baseline="central"
+  >M</text>
 </svg>
