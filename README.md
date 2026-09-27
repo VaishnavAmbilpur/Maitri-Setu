@@ -1,4 +1,4 @@
-# 🌉 MAITRI-Setu
+# MAITRI-Setu
 
 > **AI-Powered Intelligence Layer for Industrial Approvals & Compliance in Maharashtra**
 
@@ -6,21 +6,21 @@ MAITRI-Setu sits on top of Maharashtra's existing MAITRI single-window system, t
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---|---|
 | **Smart Checklist Generator** | Personalized approval list based on sector, location, and investment |
 | **Document Pre-Validation** | Instant OCR-based checking before submission |
 | **Parallel Workflow Orchestrator** | Independent approvals run simultaneously |
-| **SLA Tracker & Escalation** | Real-time deadline monitoring with color-coded alerts |
+| **SLA Tracker & Escalation** | Real-time deadline monitoring with legal threshold alerts |
 | **Incentive Matching Engine** | Auto-suggested government schemes |
 | **Analytics Dashboard** | Department-wise delay and bottleneck visibility |
 | **Joint Inspection Scheduling** | Coordinated multi-department site visits |
 
 ---
 
-## 🛠️ Tech Stack (100% Free & Open Source)
+## Tech Stack (100% Free & Open Source)
 
 | Layer | Technology |
 |---|---|
@@ -28,7 +28,7 @@ MAITRI-Setu sits on top of Maharashtra's existing MAITRI single-window system, t
 | Routing | React Router v6 |
 | Charts | Recharts |
 | Backend | Node.js + Express.js |
-| Database | PostgreSQL + Prisma ORM |
+| Database | SQLite / PostgreSQL + Prisma ORM |
 | OCR | Tesseract.js |
 | Rules Engine | json-rules-engine |
 | Auth | JWT (jsonwebtoken) |
@@ -36,11 +36,10 @@ MAITRI-Setu sits on top of Maharashtra's existing MAITRI single-window system, t
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+
-- PostgreSQL running locally
 - Git
 
 ### 1. Clone & Install
@@ -56,12 +55,12 @@ cd frontend && npm install
 cd ../backend && npm install
 ```
 
-### 2. Configure Database
+### 2. Configure Database & Environment
 
 ```bash
-# Edit backend/.env with your PostgreSQL URL
-DATABASE_URL=postgresql://user:password@localhost:5432/maitrisetu
-JWT_SECRET=maitri-setu-prototype-secret-key-2025
+# Edit backend/.env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET=super_secret_jwt_key_sih2026
 PORT=5000
 ```
 
@@ -69,7 +68,7 @@ PORT=5000
 
 ```bash
 cd backend
-npx prisma migrate dev --name init
+npx prisma db push
 node prisma/seed.js
 ```
 
@@ -87,7 +86,7 @@ Visit **http://localhost:3000**
 
 ---
 
-## 👤 Demo Credentials
+## Demo Credentials
 
 | Role | Email | Password |
 |---|---|---|
@@ -97,42 +96,42 @@ Visit **http://localhost:3000**
 
 ---
 
-## 📊 Pre-seeded Demo Data
+## Pre-seeded Demo Data
 
 | Application | Sector | Status | SLA |
 |---|---|---|---|
-| ABC Manufacturing (Pune) | Mfg - Non-Polluting | ✅ Approved | All clear |
-| XYZ Industries (Nashik) | Mfg - Polluting | ⚠️ In Progress | Fire NOC near deadline |
-| TechStart IT (Mumbai) | IT/Services | 🔴 SLA Breached | Factory Licence overdue |
-| Nagpur Foods (Nagpur) | Food Processing | ⬜ Draft | Not submitted |
+| ABC Manufacturing (Pune) | Mfg - Non-Polluting | Approved | All clear |
+| XYZ Industries (Nashik) | Mfg - Polluting | In Progress | Fire NOC near deadline |
+| TechStart IT (Mumbai) | IT/Services | SLA Breached | Factory Licence overdue |
+| Nagpur Foods (Nagpur) | Food Processing | Draft | Not submitted |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-├── frontend/           React + Vite + Tailwind
+├── frontend/           React + Vite + Tailwind CSS
 │   ├── src/
 │   │   ├── api/        Axios API client
 │   │   ├── context/    Auth context
-│   │   ├── components/ Shared components
-│   │   └── pages/      All page components
+│   │   ├── components/ Shared components & Shadcn UI
+│   │   └── pages/      Applicant & Officer page views
 │   └── package.json
-├── backend/            Node + Express + Prisma
-│   ├── prisma/         Schema + seed script
+├── backend/            Node + Express + Prisma ORM
+│   ├── prisma/         Schema + seed script + SQLite DB
 │   ├── src/
 │   │   ├── routes/     API endpoints
-│   │   ├── services/   SLA tracker cron
-│   │   ├── middleware/  JWT auth
+│   │   ├── services/   SLA tracker & Keep-Alive cron
+│   │   ├── middleware/ JWT auth
 │   │   ├── mockData/   Rules + incentives JSON
 │   │   └── server.js   Express entry point
 │   └── package.json
-└── .AGENTS/            AI agent context docs
+└── .AGENTS/            SIH 2026 Architecture & Specs
 ```
 
 ---
 
-## 📝 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -152,13 +151,13 @@ Visit **http://localhost:3000**
 
 ---
 
-## 🏛️ About MAITRI Integration
+## About MAITRI Integration
 
 This prototype uses **mocked department data** since real MAITRI API access requires official government partnership. The mock layer uses the exact same request/response shapes as real integration would, making the swap a drop-in replacement.
 
 ---
 
-## 📄 License
+## License
 
 MIT — All technologies used are free and open-source.
 
