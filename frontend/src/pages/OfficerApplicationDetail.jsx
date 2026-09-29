@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../api/client';
+import api, { getFileUrl } from '../api/client';
 import toast from 'react-hot-toast';
 import { 
   Building2, 
@@ -10,7 +10,8 @@ import {
   ArrowLeft, 
   ShieldCheck, 
   XCircle,
-  Clock
+  Clock,
+  ExternalLink
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
@@ -61,15 +62,6 @@ export default function OfficerApplicationDetail() {
 
   if (!app) return <div className="text-center py-20 text-zinc-400 text-xs">Application record not found.</div>;
 
-  const getFileUrl = (path) => {
-    if (!path) return '#';
-    if (path.startsWith('http')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || '';
-    const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    const host = baseUrl.replace(/\/api\/?$/, '');
-    return `${host}${cleanPath}`;
-  };
-
   return (
     <div className="space-y-8 animate-fade-in max-w-4xl mx-auto font-sans">
       {/* Header Banner */}
@@ -109,79 +101,84 @@ export default function OfficerApplicationDetail() {
           const isRejected = approval.status === 'rejected';
 
           return (
-            <Card key={approval.id} className="border-zinc-800 bg-zinc-950 p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
-              <div className="space-y-2 flex-1">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-sm font-bold text-zinc-100 font-heading">{approval.approvalType}</h3>
-                  <Badge variant={
-                    isApproved ? 'approved' :
-                    isRejected ? 'destructive' : 'in_progress'
-                  }>
-                    {approval.status}
-                  </Badge>
+            <Card key={approval.id} className="border-zinc-800 bg-zinc-950 p-6 space-y-4">
+              {/* Header row: Approval Title + Department + Status Badge + Action Buttons */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-900 pb-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-base font-bold text-zinc-100 font-heading">{approval.approvalType}</h3>
+                    <Badge variant={
+                      isApproved ? 'approved' :
+                      isRejected ? 'destructive' : 'in_progress'
+                    }>
+                      {approval.status}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-zinc-400 font-medium">{approval.departmentName}</p>
                 </div>
-                <p className="text-xs text-zinc-400">{approval.departmentName}</p>
 
-                {doc ? (
-                  <div className="pt-2 p-3 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-2">
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-zinc-300 shrink-0" />
-                        <span className="text-zinc-200 font-mono font-bold">{doc.fileName}</span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    onClick={() => handleAction(approval.id, 'approved')}
+                    disabled={isLoading || isApproved}
+                    variant={isApproved ? "secondary" : "default"}
+                    size="sm"
+                    className="font-bold text-xs"
+                  >
+                    {isLoading ? <div className="spinner !w-3.5 !h-3.5"></div> : <><CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Grant Approval</>}
+                  </Button>
+                  <Button
+                    onClick={() => handleAction(approval.id, 'rejected')}
+                    disabled={isLoading || isRejected}
+                    variant="destructive"
+                    size="sm"
+                    className="font-bold text-xs"
+                  >
+                    {isLoading ? <div className="spinner !w-3.5 !h-3.5"></div> : <><XCircle className="w-3.5 h-3.5 mr-1" /> Reject Clearance</>}
+                  </Button>
+                </div>
+              </div>
+
+              {/* Document Preview & OCR Section */}
+              {doc ? (
+                <div className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-lg bg-zinc-800/80 border border-zinc-700/60 flex items-center justify-center shrink-0 text-zinc-200">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0 space-y-0.5">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-mono font-bold text-zinc-200 truncate max-w-xs">{doc.fileName}</span>
+                        {doc.validationStatus === 'passed' ? (
+                          <Badge variant="approved" className="gap-1 text-[9px] shrink-0">
+                            <CheckCircle2 className="w-3 h-3 inline text-zinc-950" /> OCR Passed
+                          </Badge>
+                        ) : (
+                          <Badge variant="warning" className="gap-1 text-[9px] shrink-0">
+                            <AlertTriangle className="w-3 h-3 inline" /> Action Needed
+                          </Badge>
+                        )}
                       </div>
-                      <a 
-                        href={getFileUrl(doc.filePath)} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[11px] font-bold text-zinc-100 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-2.5 py-1 rounded border border-zinc-700 transition-colors"
-                      >
-                        <FileText className="w-3.5 h-3.5" /> View / Inspect File
-                      </a>
-                    </div>
-                    
-                    {/* OCR Validation Summary */}
-                    <div className="flex items-center gap-2 pt-1 border-t border-zinc-800 text-[11px]">
-                      {doc.validationStatus === 'passed' ? (
-                        <Badge variant="approved" className="gap-1 text-[9px]">
-                          <CheckCircle2 className="w-3 h-3 inline text-zinc-950" /> OCR Passed
-                        </Badge>
-                      ) : (
-                        <Badge variant="warning" className="gap-1 text-[9px]">
-                          <AlertTriangle className="w-3 h-3 inline" /> Action Needed
-                        </Badge>
-                      )}
                       {doc.validationNotes && (
-                        <span className="text-zinc-400 text-[11px] truncate">{doc.validationNotes}</span>
+                        <p className="text-[11px] text-zinc-400 truncate">{doc.validationNotes}</p>
                       )}
                     </div>
                   </div>
-                ) : (
-                  <div className="pt-2 text-xs text-zinc-400 font-medium flex items-center gap-1">
-                    <AlertTriangle className="w-3.5 h-3.5 inline text-zinc-400" /> No document uploaded yet
-                  </div>
-                )}
-              </div>
 
-              <div className="flex items-center gap-2 shrink-0 md:self-center">
-                <Button
-                  onClick={() => handleAction(approval.id, 'approved')}
-                  disabled={isLoading || isApproved}
-                  variant={isApproved ? "secondary" : "default"}
-                  size="sm"
-                  className="font-bold text-xs"
-                >
-                  {isLoading ? <div className="spinner !w-3.5 !h-3.5"></div> : <><CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Grant Approval</>}
-                </Button>
-                <Button
-                  onClick={() => handleAction(approval.id, 'rejected')}
-                  disabled={isLoading || isRejected}
-                  variant="destructive"
-                  size="sm"
-                  className="font-bold text-xs"
-                >
-                  {isLoading ? <div className="spinner !w-3.5 !h-3.5"></div> : <><XCircle className="w-3.5 h-3.5 mr-1" /> Reject Clearance</>}
-                </Button>
-              </div>
+                  <a 
+                    href={getFileUrl(doc.filePath)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-zinc-100 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg border border-zinc-700 transition-colors shrink-0 shadow-sm"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" /> Inspect Document
+                  </a>
+                </div>
+              ) : (
+                <div className="p-3 rounded-xl border border-dashed border-zinc-800 bg-zinc-950/40 text-xs text-zinc-500 flex items-center gap-2 font-medium">
+                  <AlertTriangle className="w-4 h-4 text-zinc-600 shrink-0" /> No compliance document uploaded yet by applicant
+                </div>
+              )}
             </Card>
           );
         })}

@@ -30,4 +30,26 @@ api.interceptors.response.use(
   }
 );
 
+export const getFileUrl = (path) => {
+  if (!path || path === '#') return '#';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const envApiUrl = import.meta.env.VITE_API_URL || '';
+
+  if (envApiUrl && envApiUrl.startsWith('http')) {
+    const backendHost = envApiUrl.replace(/\/api\/?$/, '');
+    return `${backendHost}${cleanPath}`;
+  }
+
+  if (typeof window !== 'undefined') {
+    const hostname = window.location.hostname;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+      return `http://localhost:5000${cleanPath}`;
+    }
+  }
+
+  return cleanPath;
+};
+
 export default api;

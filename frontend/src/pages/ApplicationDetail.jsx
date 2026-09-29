@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../api/client';
+import api, { getFileUrl } from '../api/client';
 import toast from 'react-hot-toast';
 import { 
   Building2, 
@@ -13,7 +13,8 @@ import {
   AlertCircle,
   Calendar,
   Award,
-  Layers
+  Layers,
+  ExternalLink
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/card';
@@ -57,15 +58,6 @@ export default function ApplicationDetail() {
   }
 
   if (!app) return <div className="text-center py-20 text-zinc-400 text-xs">Application record not found.</div>;
-
-  const getFileUrl = (path) => {
-    if (!path) return '#';
-    if (path.startsWith('http')) return path;
-    const baseUrl = import.meta.env.VITE_API_URL || '';
-    const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    const host = baseUrl.replace(/\/api\/?$/, '');
-    return `${host}${cleanPath}`;
-  };
 
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl mx-auto font-sans">
