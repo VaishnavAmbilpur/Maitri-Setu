@@ -155,31 +155,34 @@ export default function DocumentUpload() {
                 </div>
 
                 <div className="shrink-0">
-                  <label>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="cursor-pointer relative overflow-hidden"
-                      disabled={isUploading}
+                  <input
+                    id={`file-upload-${approval.id}`}
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => handleUpload(approval.id, e.target.files?.[0])}
+                    disabled={isUploading}
+                    accept=".pdf,.png,.jpg,.jpeg"
+                  />
+                  <label htmlFor={`file-upload-${approval.id}`}>
+                    <span 
+                      className={`inline-flex items-center justify-center rounded-lg text-xs font-semibold h-9 px-4 border border-zinc-800 bg-zinc-900 text-zinc-100 hover:bg-zinc-800 transition-colors cursor-pointer select-none ${
+                        isUploading ? 'opacity-50 pointer-events-none' : ''
+                      }`}
                     >
                       {isUploading ? (
                         <div className="flex items-center gap-2">
                           <div className="spinner !w-3.5 !h-3.5"></div>
-                          <span>Verifying...</span>
+                          <span>Verifying OCR...</span>
                         </div>
                       ) : doc ? (
-                        <>Replace File</>
+                        <span>Replace File</span>
                       ) : (
-                        <><UploadCloud className="w-3.5 h-3.5 mr-1.5" /> Upload Document</>
+                        <>
+                          <UploadCloud className="w-3.5 h-3.5 mr-1.5 text-zinc-300" />
+                          <span>Upload Document</span>
+                        </>
                       )}
-                      <input
-                        type="file"
-                        className="hidden"
-                        onChange={(e) => handleUpload(approval.id, e.target.files?.[0])}
-                        disabled={isUploading}
-                        accept=".pdf,.png,.jpg,.jpeg"
-                      />
-                    </Button>
+                    </span>
                   </label>
                 </div>
               </div>
