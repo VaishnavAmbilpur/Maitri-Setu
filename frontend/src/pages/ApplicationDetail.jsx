@@ -58,6 +58,15 @@ export default function ApplicationDetail() {
 
   if (!app) return <div className="text-center py-20 text-zinc-400 text-xs">Application record not found.</div>;
 
+  const getFileUrl = (path) => {
+    if (!path) return '#';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL || '';
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    const host = baseUrl.replace(/\/api\/?$/, '');
+    return `${host}${cleanPath}`;
+  };
+
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl mx-auto font-sans">
       {/* Header Banner */}
@@ -132,8 +141,22 @@ export default function ApplicationDetail() {
                   </Badge>
                 </div>
 
+                {approval.documents?.[0] && (
+                  <div className="pt-2 flex items-center justify-between text-xs border-t border-zinc-900">
+                    <span className="text-zinc-400 font-mono truncate max-w-[180px]">{approval.documents[0].fileName}</span>
+                    <a 
+                      href={getFileUrl(approval.documents[0].filePath)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[10px] font-bold text-zinc-100 hover:text-white underline"
+                    >
+                      View File
+                    </a>
+                  </div>
+                )}
+
                 {approval.slaInfo && (
-                  <div className="pt-3 border-t border-zinc-900 flex items-center justify-between text-xs font-mono">
+                  <div className="pt-2 border-t border-zinc-900 flex items-center justify-between text-xs font-mono">
                     <span className="text-zinc-500 uppercase text-[10px]">Statutory SLA Deadline</span>
                     <span className={`font-bold ${
                       isBreached ? 'text-zinc-100 underline' : isWarning ? 'text-zinc-200' : 'text-zinc-400'

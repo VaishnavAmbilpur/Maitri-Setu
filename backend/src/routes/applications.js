@@ -63,7 +63,7 @@ router.get('/', authMiddleware, async (req, res) => {
     const applications = await prisma.application.findMany({
       where,
       include: {
-        approvals: { include: { documents: true } },
+        approvals: { include: { documents: { orderBy: { uploadedAt: 'desc' } } } },
         user: { select: { id: true, name: true, email: true } },
         incentives: { include: { incentive: true } }
       },
@@ -89,7 +89,7 @@ router.get('/:id', authMiddleware, async (req, res) => {
     const application = await prisma.application.findUnique({
       where: { id: req.params.id },
       include: {
-        approvals: { include: { documents: true } },
+        approvals: { include: { documents: { orderBy: { uploadedAt: 'desc' } } } },
         user: { select: { id: true, name: true, email: true } },
         incentives: { include: { incentive: true } },
         inspections: true

@@ -62,7 +62,7 @@ router.post('/:approvalId/upload', authMiddleware, upload.single('document'), as
       data: {
         approvalId: req.params.approvalId,
         fileName: req.file.originalname,
-        filePath: req.file.path,
+        filePath: `/uploads/${req.file.filename}`,
         validationStatus: validationResult.status,
         validationNotes: validationResult.notes
       }

@@ -61,6 +61,15 @@ export default function OfficerApplicationDetail() {
 
   if (!app) return <div className="text-center py-20 text-zinc-400 text-xs">Application record not found.</div>;
 
+  const getFileUrl = (path) => {
+    if (!path) return '#';
+    if (path.startsWith('http')) return path;
+    const baseUrl = import.meta.env.VITE_API_URL || '';
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    const host = baseUrl.replace(/\/api\/?$/, '');
+    return `${host}${cleanPath}`;
+  };
+
   return (
     <div className="space-y-8 animate-fade-in max-w-4xl mx-auto font-sans">
       {/* Header Banner */}
@@ -100,8 +109,8 @@ export default function OfficerApplicationDetail() {
           const isRejected = approval.status === 'rejected';
 
           return (
-            <Card key={approval.id} className="border-zinc-800 bg-zinc-950 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-1.5">
+            <Card key={approval.id} className="border-zinc-800 bg-zinc-950 p-6 flex flex-col md:flex-row md:items-start justify-between gap-6">
+              <div className="space-y-2 flex-1">
                 <div className="flex items-center gap-3">
                   <h3 className="text-sm font-bold text-zinc-100 font-heading">{approval.approvalType}</h3>
                   <Badge variant={
@@ -114,12 +123,37 @@ export default function OfficerApplicationDetail() {
                 <p className="text-xs text-zinc-400">{approval.departmentName}</p>
 
                 {doc ? (
-                  <div className="pt-2 text-xs flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-zinc-300" />
-                    <span className="text-zinc-200 font-mono">{doc.fileName}</span>
-                    <Badge variant="outline" className="text-[9px]">
-                      <CheckCircle2 className="w-3 h-3 mr-1 inline text-zinc-100" /> Pre-Validated
-                    </Badge>
+                  <div className="pt-2 p-3 rounded-lg bg-zinc-900/80 border border-zinc-800 space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <div className="flex items-center gap-2">
+                        <FileText className="w-4 h-4 text-zinc-300 shrink-0" />
+                        <span className="text-zinc-200 font-mono font-bold">{doc.fileName}</span>
+                      </div>
+                      <a 
+                        href={getFileUrl(doc.filePath)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-bold text-zinc-100 hover:text-white bg-zinc-800 hover:bg-zinc-700 px-2.5 py-1 rounded border border-zinc-700 transition-colors"
+                      >
+                        <FileText className="w-3.5 h-3.5" /> View / Inspect File
+                      </a>
+                    </div>
+                    
+                    {/* OCR Validation Summary */}
+                    <div className="flex items-center gap-2 pt-1 border-t border-zinc-800 text-[11px]">
+                      {doc.validationStatus === 'passed' ? (
+                        <Badge variant="approved" className="gap-1 text-[9px]">
+                          <CheckCircle2 className="w-3 h-3 inline text-zinc-950" /> OCR Passed
+                        </Badge>
+                      ) : (
+                        <Badge variant="warning" className="gap-1 text-[9px]">
+                          <AlertTriangle className="w-3 h-3 inline" /> Action Needed
+                        </Badge>
+                      )}
+                      {doc.validationNotes && (
+                        <span className="text-zinc-400 text-[11px] truncate">{doc.validationNotes}</span>
+                      )}
+                    </div>
                   </div>
                 ) : (
                   <div className="pt-2 text-xs text-zinc-400 font-medium flex items-center gap-1">
@@ -128,7 +162,7 @@ export default function OfficerApplicationDetail() {
                 )}
               </div>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-2 shrink-0 md:self-center">
                 <Button
                   onClick={() => handleAction(approval.id, 'approved')}
                   disabled={isLoading || isApproved}
