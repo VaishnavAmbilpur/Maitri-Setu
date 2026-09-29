@@ -125,67 +125,7 @@ export default function OfficerDashboard() {
         </div>
       )}
 
-      {/* Monochrome Policy Analytics Charts Grid */}
-      {analytics && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Department Volume Bar Chart */}
-          <Card className="p-6 border-zinc-800 bg-zinc-950 space-y-4">
-            <div className="flex items-center justify-between border-b border-zinc-900 pb-3">
-              <h3 className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-zinc-400" /> Departmental Workload Density
-              </h3>
-              <Badge variant="outline" className="text-[9px]">Grayscale Telemetry</Badge>
-            </div>
 
-            <div className="h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={deptData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="2 2" stroke="#27272a" />
-                  <XAxis dataKey="name" stroke="#71717a" fontSize={10} tickLine={false} />
-                  <YAxis stroke="#71717a" fontSize={10} tickLine={false} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#f4f4f5', fontSize: '11px' }} 
-                  />
-                  <Bar dataKey="count" fill="#f4f4f5" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-
-          {/* Status Distribution Pie Chart */}
-          <Card className="p-6 border-zinc-800 bg-zinc-950 space-y-4">
-            <div className="flex items-center justify-between border-b border-zinc-900 pb-3">
-              <h3 className="text-xs font-bold text-zinc-200 uppercase tracking-wider flex items-center gap-2">
-                <PieChart className="w-4 h-4 text-zinc-400 inline" /> Status Compliance Ratio
-              </h3>
-              <Badge variant="outline" className="text-[9px]">Monochrome Ratio</Badge>
-            </div>
-
-            <div className="h-56 flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={statusData}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={75}
-                    innerRadius={45}
-                    paddingAngle={3}
-                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                  >
-                    {statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={GRAYSCALE_SHADES[index % GRAYSCALE_SHADES.length]} stroke="#09090b" />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '8px', color: '#f4f4f5', fontSize: '11px' }} />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        </div>
-      )}
 
       {/* Review Queue Table Section */}
       <Card className="border-zinc-800 bg-zinc-950 p-6 space-y-4">
