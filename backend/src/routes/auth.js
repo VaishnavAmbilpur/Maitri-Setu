@@ -5,6 +5,8 @@ const prisma = require('../lib/prisma');
 
 const router = express.Router();
 
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_jwt_key_sih2026';
+
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   try {
@@ -30,7 +32,7 @@ router.post('/register', async (req, res) => {
 
     const token = jwt.sign(
       { userId: user.id, role: user.role, email: user.email },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '24h' }
     );
 
@@ -65,7 +67,7 @@ router.post('/login', async (req, res) => {
 
     const token = jwt.sign(
       { userId: user.id, role: user.role, email: user.email },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '24h' }
     );
 
