@@ -27,9 +27,11 @@ export default function ApplicantDashboard() {
   const fetchApplications = async () => {
     try {
       const res = await api.get('/applications');
-      setApplications(res.data);
+      const data = Array.isArray(res.data) ? res.data : (res.data?.applications || []);
+      setApplications(data);
     } catch {
       toast.error('Failed to load applications');
+      setApplications([]);
     } finally {
       setLoading(false);
     }

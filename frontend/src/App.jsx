@@ -14,19 +14,38 @@ import OfficerApplicationDetail from './pages/OfficerApplicationDetail';
 
 function ProtectedRoute({ children, role }) {
   const { isAuthenticated, user, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center min-h-screen"><div className="spinner"></div></div>;
-  if (!isAuthenticated) return <Navigate to="/login" />;
-  if (role && user?.role !== role) return <Navigate to={user?.role === 'officer' ? '/officer' : '/dashboard'} />;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-[#09090b]">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+  if (!isAuthenticated || !user) {
+    return <Navigate to="/login" replace />;
+  }
+  if (role && user.role !== role) {
+    const target = user.role === 'officer' ? '/officer' : '/dashboard';
+    return <Navigate to={target} replace />;
+  }
   return children;
 }
 
 function AppRoutes() {
   const { isAuthenticated, user } = useAuth();
 
+  const getTargetDashboard = () => {
+    if (!user || !user.role) return '/dashboard';
+    return user.role === 'officer' ? '/officer' : '/dashboard';
+  };
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={isAuthenticated ? <Navigate to={user?.role === 'officer' ? '/officer' : '/dashboard'} /> : <Login />} />
+      <Route 
+        path="/login" 
+        element={isAuthenticated && user ? <Navigate to={getTargetDashboard()} replace /> : <Login />} 
+      />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route path="/dashboard" element={<ProtectedRoute role="applicant"><ApplicantDashboard /></ProtectedRoute>} />
         <Route path="/onboarding" element={<ProtectedRoute role="applicant"><OnboardingWizard /></ProtectedRoute>} />
@@ -36,7 +55,7 @@ function AppRoutes() {
         <Route path="/officer" element={<ProtectedRoute role="officer"><OfficerDashboard /></ProtectedRoute>} />
         <Route path="/officer/application/:id" element={<ProtectedRoute role="officer"><OfficerApplicationDetail /></ProtectedRoute>} />
       </Route>
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

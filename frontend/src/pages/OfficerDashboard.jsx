@@ -36,10 +36,14 @@ export default function OfficerDashboard() {
         api.get('/officer/queue'),
         api.get('/officer/analytics')
       ]);
-      setQueue(queueRes.data.applications);
-      setAnalytics(analyticsRes.data);
+      const queueData = Array.isArray(queueRes.data?.applications) 
+        ? queueRes.data.applications 
+        : (Array.isArray(queueRes.data) ? queueRes.data : []);
+      setQueue(queueData);
+      setAnalytics(analyticsRes.data || null);
     } catch {
       toast.error('Failed to load officer data');
+      setQueue([]);
     } finally {
       setLoading(false);
     }

@@ -5,8 +5,13 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('maitri_token') || null);
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('maitri_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('maitri_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      localStorage.removeItem('maitri_user');
+      return null;
+    }
   });
   const [loading] = useState(false);
 
